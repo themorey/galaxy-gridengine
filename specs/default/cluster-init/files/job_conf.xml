@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!-- A sample job config that describes all available options -->
+<job_conf>
+    <plugins>
+        <!-- "workers" is the number of threads for the runner's work queue.
+             The default from <plugins> is used if not defined for a <plugin>.
+             For all asynchronous runners (i.e. everything other than
+             LocalJobRunner), this is the number of threads available for
+             starting and finishing jobs. For the LocalJobRunner, this is the
+             number of concurrent jobs that Galaxy will run.
+          -->
+        <plugin id="drmaa" type="runner" load="galaxy.jobs.runners.drmaa:DRMAAJobRunner">
+            <!-- Override the $DRMAA_LIBRARY_PATH environment variable -->
+            <param id="drmaa_library_path">/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so</param>
+        </plugin>
+    </plugins>
+    <destinations default="htc">
+        <!-- Destinations define details about remote resources and how jobs
+             should be executed on those remote resources.
+         -->
+        <destination id="htc" runner="drmaa">
+            <!-- SGE DRMAA to send to a specific request 7GB of RAM (2 per CPU) and 4 CPUs -->
+            <param id="nativeSpecification">-w n -l slot_type=htc</param>
+        </destination>
+        <destination id="mpi" runner="drmaa">
+            <!-- SGE DRMAA to send to a specific request 420 GB of RAM and 116 CPUs for MPI job -->
+            <param id="nativeSpecification">-w n -pe mpi 116</param>
+        </destination>
+    </destinations>
+</job_conf>
