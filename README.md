@@ -78,7 +78,7 @@ The provided config files provide default settings with the following assumption
   
   
   - Git clone this project   
-      `git clone https://github.com/themorey/galaxy-gridengine.git .`  
+      `git clone https://github.com/themorey/galaxy-gridengine.git`  
   
   - Upload project to CC locker  
         `cd galaxy-gridengine`  
