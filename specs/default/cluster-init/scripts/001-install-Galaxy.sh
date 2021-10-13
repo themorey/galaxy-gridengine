@@ -20,7 +20,7 @@ chown -R ${sge_user}:${sge_user} /shared/Galaxy
 
 
 # set local DRMAA environment variable
-if [ ! grep -qi "DRMAA_LIBRARY_PATH" /etc/profile ]; then
+if ! grep -qi "DRMAA_LIBRARY_PATH" /etc/profile; then
   echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
 fi
 source /etc/profile
