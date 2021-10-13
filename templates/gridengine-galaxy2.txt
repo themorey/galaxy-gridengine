@@ -17,7 +17,6 @@ Autoscale = $Autoscale
     CloudInit = '''#cloud-config
 runcmd:
  - yum install -y git python3
- - ln -sf /bin/python3 /bin/python
  - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
  - source /etc/profile
 '''    
