@@ -9,12 +9,13 @@ yum install -y git python3
 gal_dir=/shared/Galaxy/galaxy-app
 
 
-# Define a cluster user (Cycle Cluster Owner), create virtualenv and start/install Galaxy
+# Define a cluster user (Cycle Cluster Owner) and start/install Galaxy
 if -f /opt/cycle/jetpack/bin/jetpack; then
   sge_user=$(jetpack config cyclecloud.cluster.user.name)
 else
   sge_user=cycleadmin
 fi
+mkdir -p /shared/Galaxy
 chown -R ${sge_user}:${sge_user} /shared/Galaxy
 
 
@@ -60,6 +61,7 @@ if -d /opt/cycle; then
   submitter=$(hostname -f)
   runuser -l ${sge_user} -c "ssh ${sge_user}@${sge_ip} 'sudo -i qconf -as ${submitter}'"
 fi
+
 
 # Start Galaxy as a daemon with galaxy.log file
 if -d ${CYCLECLOUD_SPEC_PATH}; then
