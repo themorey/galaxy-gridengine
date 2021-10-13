@@ -46,18 +46,20 @@ fi
 if -d ${CYCLECLOUD_SPEC_PATH}; then
   cp ${CYCLECLOUD_SPEC_PATH}/files/{galaxy.yml,job_conf.xml,auth_conf.xml} ${gal_dir}/config
 else
-  wget -O ${gal_dir}/config/galaxy.yml 
-  wget -O ${gal_dir}/config/galaxy.yml 
-  wget -O ${gal_dir}/config/galaxy.yml 
+  wget -O ${gal_dir}/config/galaxy.yml https://raw.githubusercontent.com/themorey/galaxy-gridengine/main/specs/default/cluster-init/files/galaxy.yml?token=AF2OLBZQPTJOCYPRBTN2T33BM3KUI
+  wget -O ${gal_dir}/config/auth_config.xml https://raw.githubusercontent.com/themorey/galaxy-gridengine/main/specs/default/cluster-init/files/auth_conf.xml?token=AF2OLB5MB667BS3C4672MTTBM3KRI 
+  wget -O ${gal_dir}/config/job_config.xml https://raw.githubusercontent.com/themorey/galaxy-gridengine/main/specs/default/cluster-init/files/job_conf.xml?token=AF2OLBZPJKTAHMOWQNQAIDLBM3KWU
 fi
 
 
 chown ${sge_user}:${sge_user} ${gal_dir}/config/{galaxy.yml,job_conf.xml,auth_conf.xml}
 
 
-#pip3 install --user virtualenv
-#/bin/python3 -m virtualenv /shared/Galaxy/galaxy_env
-
+# register Galaxy server as SGE submit node IF deployed by CycleCloud
+if -d /opt/cycle; then
+  submitter=$(hostname -f)
+  runuser -l ${sge_user} -c "ssh ${sge_user}@${sge_ip} 'sudo -i qconf -as ${submitter}'"
+fi
 
 # Start Galaxy as a daemon with galaxy.log file
 if -d ${CYCLECLOUD_SPEC_PATH}; then
