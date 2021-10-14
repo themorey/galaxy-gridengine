@@ -70,6 +70,7 @@ runcmd:
 
         [[[network-interface eth0]]]
         AssociatePublicIpAddress = $GalaxyPublicNetwork
+        PublicDnsLabel = galaxy-${ClusterName}
 
         [[[input-endpoint SSH]]]
         PrivatePort = 22
