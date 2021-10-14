@@ -398,7 +398,7 @@ Order = 20
         ParameterType = Cloud.Image
         Config.Filter := Package in {"cycle.image.centos7", "cycle.image.centos8", "cycle.image.ubuntu18"}
         Config.OS = linux
-        DefaultValue = cycle.image.centos7
+        DefaultValue = OpenLogic:CentOS:7_9-gen2:latest
 
         [[[parameter SchedulerImageName]]]
         Label = Scheduler Base OS
