@@ -9,6 +9,7 @@ This project will deploy a GridEngine cluster (Scheduler and Compute nodes) and 
   - deploy SGE cluster consisting of scheduler node and configurable amount & type of compute
     - VM types and quantity can be selected in CycleCloud Portal after cluster is imported
     - the SGE `slot_type` name, quantity, config, etc can be modified in the CycleCloud template file provided 
+    - Cloud-init will install git & Python3 on scheduler & compute nodes; also sets `DRMAA_LIBRARY_PATH` variable
   - deploy SGE submit node and install [Galaxy](https://docs.galaxyproject.org/en/master/index.html) 
     - default config files (ie. `galaxy.yml`, `job_config.xml` & `auth_config.xml`) are provided and can be updated (__REF__: `specs/default/cluster_init/files`)
     - apply option for public IP address (and DNS name) on Galaxy VM (configured in CycleCloud Portal)
