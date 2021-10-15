@@ -42,7 +42,7 @@ chmod 1777 /mnt/resource
 
 
 # CLone the Galaxy repo to shared NFS dir (/shared)
-if [ ! -d ${gal_dir} ]; then
+if [ ! -d ${gal_dir}/run.sh ]; then
   runuser -l ${sge_user} -c "git clone https://github.com/galaxyproject/galaxy.git ${gal_dir}"
 fi
 
