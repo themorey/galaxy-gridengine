@@ -1,7 +1,21 @@
 # Galaxy server with GridEngine
 ========
 
-This project will deploy a GridEngine cluster (Scheduler and Compute nodes) and a Galaxy server configured as a GrideEngine submitter node.  Galaxy will use the DRMAA Python API to submit jobs to SGE as configured in the provided config files (ie. `galaxy.yml`, `job_config.xml` & `auth_config.xml`).
+This project will deploy a GridEngine cluster (Scheduler and Compute nodes) and a Galaxy server configured as a GrideEngine submitter node.  Galaxy will use the DRMAA Python API to submit jobs to SGE as configured in the provided config files (ie. `galaxy.yml`, `job_config.xml` & `auth_config.xml`).  
+
+## High Level Overview  
+  
+  This project will do the following:
+  - deploy SGE cluster consisting of scheduler node and configurable amount & type of compute
+    - VM types and quantity can be selected in CycleCloud Portal after cluster is imported
+    - the SGE `slot_type` name, quantity, config, etc can be modified in the CycleCloud template file provided 
+  - deploy SGE submit node and install [Galaxy](https://docs.galaxyproject.org/en/master/index.html) 
+    - default config files (ie. `galaxy.yml`, `job_config.xml` & `auth_config.xml`) are provided and can be updated (__REF__: `specs/default/cluster_init/files`)
+    - apply option for public IP address (and DNS name) on Galaxy VM (configured in CycleCloud Portal)
+    - if a Public IP is associated, a NSG rule will be created to allow SSH and HTTP (TCP ports 22 & 8080) to Galaxy VM
+    - installs Git, Python3, pip, virtualenv on the Galaxy VM
+    - links `DRMAA_LIBRARY_PATH` in `/etc/profile` (__REF__: `specs/default/cluster_init/scripts/001-install-Galaxy.sh`)
+    - git clone Galaxy to NFS mount and runs it as a SGE user (as daemon with galaxy.log)
 
 
 ## Cluster template file changes from default:
