@@ -98,9 +98,14 @@ The provided config files provide default settings with the following assumption
   - Upload project to CC locker  
         `cd galaxy-gridengine`  
         `# modify files (if needed)`  
-        `cyclecloud project upload <locker_name>`  
+        `cyclecloud locker list`  
+        &nbsp;&nbsp;&nbsp;&nbsp;Azure cycle Locker  (az://mystorageaccount/cyclecloud)  
+        `cyclecloud project upload "Azure cycle Locker" `  
+
         
   - Import cluster template to CC  
-        `cyclecloud import_cluster Galaxy-Gridengine -c Galaxy -f templates/gridengine-galaxy2.txt`  
+        `cyclecloud import_cluster <cluster-name> -c Galaxy -f templates/gridengine-galaxy2.txt`  
+          
+       *NOTE*: substitute \<cluster-name\> with a name for your cluster...all lower case, no spaces  
         
   - Navigate to CC Portal to configure & start the cluster
