@@ -86,29 +86,7 @@ fi
 # fi
 
 
-# Create, enable & start systemd service for Galaxy
-# cat <<EOF >>/etc/systemd/system/galaxy.service
-# [Unit]
-# Description=Galaxy
-# After=network.target
-# After=time-sync.target
-
-# [Service]
-# Environment="SGE_ROOT=$SGE_ROOT"
-# Environment="SGE_CELL=$SGE_CELL"
-# Environment="SGE_EXECD_PORT=$SGE_EXECD_PORT"
-# Environment="SGE_QMASTER_PORT=$SGE_QMASTER_PORT"
-# Environment="SGE_CLUSTER_NAME=$SGE_CLUSTER_NAME"
-# User=${sge_user}
-# WorkingDirectory=${gal_dir}
-# ExecStart=/bin/sh -c 'GALAXY_LOG=${gal_dir}/galaxy.log nohup ${gal_dir}/run.sh --daemon > ${gal_dir}/galaxy.log 2>&1'
-# ExecStop=/bin/bash ${gal_dir}/run.sh --stop-daemon
-# Restart=always
-
-# [Install]
-# WantedBy=multi-user.target reboot.target
-# EOF
-
+# systemd service for Galaxy web without NGINX
 cat <<EOF >>/etc/systemd/system/galaxy.service
 [Unit]
 Description=Galaxy
@@ -122,21 +100,46 @@ Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
 Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
 Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
 UMask=022
-Type=simple
-User=$(jetpack config cyclecloud.user.name)
-Group=$(jetpack config cyclecloud.user.name)
+User=${sge_user}
+Group=${sge_user}
 WorkingDirectory=${gal_dir}
-ExecStart=/bin/sh -c '/shared/Galaxy/.venv/bin/uwsgi --yaml /shared/Galaxy/config/galaxy.yml > /shared/Galaxy/galaxy.log 2>&1'
-MemoryLimit=12G
+ExecStart=/bin/sh -c 'GALAXY_LOG=${gal_dir}/galaxy.log nohup ${gal_dir}/run.sh --daemon >> ${gal_dir}/galaxy.log 2>&1'
+ExecStop=/bin/bash ${gal_dir}/run.sh --stop-daemon
 Restart=always
 
-MemoryAccounting=yes
-CPUAccounting=yes
-BlockIOAccounting=yes
-
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target reboot.target
 EOF
+
+# systemd service for Galaxy with NGINX proxy
+# cat <<EOF >>/etc/systemd/system/galaxy.service
+# [Unit]
+# Description=Galaxy
+# After=network.target
+# After=time-sync.target
+
+# [Service]
+# Environment="SGE_ROOT=${SGE_ROOT}"
+# Environment="SGE_CELL=${SGE_CELL}"
+# Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
+# Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
+# Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
+# UMask=022
+# Type=simple
+# User=${sge_user}
+# Group=${sge_user}
+# WorkingDirectory=${gal_dir}
+# ExecStart=/bin/sh -c '/shared/Galaxy/.venv/bin/uwsgi --yaml /shared/Galaxy/config/galaxy.yml > /shared/Galaxy/galaxy.log 2>&1'
+# MemoryLimit=12G
+# Restart=always
+
+# MemoryAccounting=yes
+# CPUAccounting=yes
+# BlockIOAccounting=yes
+
+# [Install]
+# WantedBy=multi-user.target
+# EOF
 
 systemctl daemon-reload
 systemctl enable galaxy.service
