@@ -67,7 +67,7 @@ runcmd:
         run_list = recipe[cyclecloud::_hosts], recipe[cshared::client], recipe[cuser], recipe[gridengine::submitter]
 	galaxy.admin = $GalaxyAdminUser
         
-        [[[cluster-init cyclecloud-galaxy:default:1.0.0]]]
+        [[[cluster-init cyclecloud-galaxy:default]]]
 
         [[[network-interface eth0]]]
         AssociatePublicIpAddress = $GalaxyPublicNetwork
