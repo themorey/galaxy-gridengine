@@ -65,6 +65,7 @@ runcmd:
     
         [[[configuration]]]
         run_list = recipe[cyclecloud::_hosts], recipe[cshared::client], recipe[cuser], recipe[gridengine::submitter]
+	galaxy.admin = $GalaxyAdminUser
         
         [[[cluster-init cyclecloud-galaxy:default:1.0.0]]]
 
@@ -382,6 +383,10 @@ Order = 20
         [[[parameter Credentials]]]
         Description = The credentials for the cloud provider
         ParameterType = Cloud.Credentials
+	
+        [[[parameter GalaxyAdminUser]]]
+        Label = Galaxy Admin
+        Description = The email address of the Galaxy Admin user (ie. username@microsoft.com)
 
     [[parameters Grid Engine Settings ]]
     Description = "Section for configuring Grid Engine"
