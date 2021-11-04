@@ -103,8 +103,8 @@ UMask=022
 User=${sge_user}
 Group=${sge_user}
 WorkingDirectory=${gal_dir}
-ExecStart=/bin/sh -c 'GALAXY_LOG=${gal_dir}/galaxy.log nohup ${gal_dir}/run.sh --daemon >> ${gal_dir}/galaxy.log 2>&1'
-ExecStop=/bin/bash ${gal_dir}/run.sh --stop-daemon
+ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
+ExecStop=/bin/sh ${gal_dir}/run.sh --stop-daemon
 Restart=always
 
 [Install]
