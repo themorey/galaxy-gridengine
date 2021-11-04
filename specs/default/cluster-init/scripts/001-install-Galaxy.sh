@@ -3,7 +3,7 @@ set -ex
 
 # Set SELinux to permissive
 setenforce 0 
-sed -i 's/enforcing/permissive' /etc/selinux/config
+sed -i 's/enforcing/permissive/g' /etc/selinux/config
 
 
 #Install Python3 and Packages
