@@ -153,3 +153,4 @@ ${gal_dir}/galaxy.log {
   missingok
   notifempty
 }
+EOF
