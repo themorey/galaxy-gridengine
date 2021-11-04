@@ -21,7 +21,7 @@ uwsgi:
   # The address and port on which to listen.  By default, only listen to
   # localhost (galaxy will not be accessible over the network).  Use
   # ':8080' to listen on all available network interfaces.
-  http: :8080
+  http: :80
 
   # By default uWSGI allocates a very small buffer (4096 bytes) for the
   # headers of each request. If you start receiving "invalid request
@@ -32,7 +32,7 @@ uwsgi:
   # Number of web server (worker) processes to fork after the
   # application has loaded. If this is set to greater than 1,
   # thunder-lock likely should be enabled below.
-  processes: 1
+  processes: 2
 
   # Number of threads for each web server process.
   threads: 4
@@ -55,11 +55,11 @@ uwsgi:
   # Enable the master process manager. Disabled by default for maximum
   # compatibility with CTRL+C, but should be enabled for use with
   # --daemon and/or production deployments.
-  master: false
+  master: true
 
   # Path to the application's Python virtual environment. If using Conda
   # for Galaxy's framework dependencies (not tools!), do not set this.
-  virtualenv: /shared/Galaxy/galaxy-app/.venv
+  virtualenv: /shared/Galaxy/.venv
 
   # Path to the application's Python library.
   pythonpath: lib
@@ -78,7 +78,7 @@ uwsgi:
 
   # It is usually a good idea to set this to ``true`` if processes is
   # greater than 1.
-  thunder-lock: false
+  thunder-lock: true
 
   # Cause uWSGI to respect the traditional behavior of dying on SIGTERM
   # (its default is to brutally reload workers)
@@ -1604,7 +1604,7 @@ galaxy:
   # Admin section of the server, and will have access to create users,
   # groups, roles, libraries, and more.  For more information, see:
   # https://galaxyproject.org/admin/
-  admin_users: jerry.morey@microsoft.com
+  admin_users: $(jetpack config galaxy.admin)
 
   # Force everyone to log in (disable anonymous access).
   #require_login: false
@@ -2121,6 +2121,8 @@ galaxy:
   # galaxy_worker) who can run every job being submitted. This user
   # should not be the same user running the galaxy system. Possible
   # values are user_email (default), username or <common_system_user>
+  # For Azure integration with SGE cluster this will use the user that
+  # is prepared by CycleCloud across the cluster.
   #real_system_username: user_email
   real_system_username: $(jetpack config cyclecloud.cluster.user.name)
 
@@ -2354,4 +2356,3 @@ galaxy:
   # images and JSON of Topics/Subtopics/Slides as export. This location
   # is relative to galaxy/static
   #welcome_directory: plugins/welcome_page/new_user/static/topics/
-
