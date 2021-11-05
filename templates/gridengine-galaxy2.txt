@@ -78,6 +78,9 @@ runcmd:
 
         [[[input-endpoint HTTP]]]
         PrivatePort = 8080
+	
+	[[[input-endpoint HTTPS]]]
+        PrivatePort = 443
 
     [[node scheduler]]
     MachineType = $SchedulerMachineType
