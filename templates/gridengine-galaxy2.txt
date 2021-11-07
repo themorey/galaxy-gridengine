@@ -103,8 +103,26 @@ runcmd:
         Mount = builtinsched
         Persistent = False
 
-        [[[volume shared]]]
-        Size = ${ifThenElse(NFSType == "Builtin", FilesystemSize, 2)}
+        [[[volume shared-1]]]
+        Size = ${ifThenElse(NFSType == "Builtin", FilesystemSize/4, 2)}
+        SSD = True
+        Mount = builtinshared
+        Persistent = ${NFSType == "Builtin"}
+	
+	[[[volume shared-2]]]
+        Size = ${ifThenElse(NFSType == "Builtin", FilesystemSize/4, 2)}
+        SSD = True
+        Mount = builtinshared
+        Persistent = ${NFSType == "Builtin"}
+	
+	[[[volume shared-3]]]
+        Size = ${ifThenElse(NFSType == "Builtin", FilesystemSize/4, 2)}
+        SSD = True
+        Mount = builtinshared
+        Persistent = ${NFSType == "Builtin"}
+	
+	[[[volume shared-4]]]
+        Size = ${ifThenElse(NFSType == "Builtin", FilesystemSize/4, 2)}
         SSD = True
         Mount = builtinshared
         Persistent = ${NFSType == "Builtin"}
@@ -117,6 +135,7 @@ runcmd:
         disabled = ${NFSType != "Builtin"}
         mountpoint = /shared
         fs_type = xfs
+	raid_level = 0
 
         [[[configuration cyclecloud.exports.builtinsched]]]
         export_path = /sched
