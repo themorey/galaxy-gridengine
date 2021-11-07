@@ -6,12 +6,6 @@ setenforce 0
 sed -i 's/enforcing/permissive/g' /etc/selinux/config
 
 
-#Install Python3 and Packages
-yum install -y git python3
-runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
-runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
-
-
 # Set Galaxy install directory to NFS (/shared)
 gal_dir=/shared/Galaxy
 
@@ -30,6 +24,12 @@ else
 fi
 
 
+#Install Python3 and Packages
+yum install -y git python3
+runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
+runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
+
+
 # set local DRMAA environment variable
 if ! grep -qi "DRMAA_LIBRARY_PATH" /etc/profile; then
   echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
@@ -44,7 +44,7 @@ if [ -O /datasets ]; then
 fi
 
 
-# set permissions of local SSD (cache_dir)
+# set permissions of local SSD (cache_dir?)
 chmod 1777 /mnt/resource
 
 
