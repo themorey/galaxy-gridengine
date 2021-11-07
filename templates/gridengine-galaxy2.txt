@@ -77,7 +77,7 @@ runcmd:
         PrivatePort = 22
 
         [[[input-endpoint HTTP]]]
-        PrivatePort = 8080
+        PrivatePort = 80
 	
 	[[[input-endpoint HTTPS]]]
         PrivatePort = 443
