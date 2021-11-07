@@ -350,7 +350,7 @@ Order = 15
         [[[parameter FilesystemSize]]]
         Label = Size (GB)
         Description = The filesystem size
-        DefaultValue = 100
+        DefaultValue = 1000
 
         Config.Plugin = pico.form.NumberTextBox
         Config.MinValue = 10
