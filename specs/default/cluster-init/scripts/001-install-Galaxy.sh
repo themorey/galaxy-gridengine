@@ -16,7 +16,9 @@ if [ -f /opt/cycle/jetpack/bin/jetpack ]; then
 else
   sge_user=cycleadmin
 fi
-mkdir -p ${gal_dir}
+if [ ! -d ${gal_dir} ]; then
+  mkdir -p ${gal_dir}
+fi
 if [[ $(stat -c '%U' ${gal_dir}) == ${sge_user} ]]; then
   echo "skipping...Galaxy dir already owned by ${sge_user}"
 else
@@ -25,7 +27,7 @@ fi
 
 
 #Install Python3 and Packages
-yum install -y git python3
+yum install -y git python3 openssl openssl-devel
 runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
 runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
 
@@ -44,7 +46,7 @@ if [ -O /datasets ]; then
 fi
 
 
-# set permissions of local SSD (cache_dir?)
+# set permissions of local SSD (cache_dir)
 chmod 1777 /mnt/resource
 
 
@@ -66,6 +68,7 @@ if [ ! -f ${gal_dir}/config/auth_conf.xml ]; then
 fi
 
 chown ${sge_user}:${sge_user} ${gal_dir}/config/{galaxy.yml,job_conf.xml,auth_conf.xml}
+sed -i "s/galaxy.user.name/$(jetpack config cyclecloud.cluster.user.name)/g" ${gal_dir}/config/galaxy.yml
 
 
 # register Galaxy server as SGE submit node IF deployed by CycleCloud
@@ -76,17 +79,16 @@ if [ -d /opt/cycle ]; then
 fi
 
 
-# Start Galaxy as a daemon with galaxy.log file
-# if [ -d ${CYCLECLOUD_SPEC_PATH} ]; then
-#  jetpack log 'Galaxy startup begun'
-#  runuser -l ${sge_user} -c "GALAXY_LOG=${gal_dir}/galaxy.log nohup sh ${gal_dir}/run.sh --daemon \
-#    > ${gal_dir}/galaxy.log 2>&1; sudo -i jetpack log 'Galaxy daemon started' " &
-# else
-#  runuser -l ${sge_user} -c "GALAXY_LOG=${gal_dir}/galaxy.log sh ${gal_dir}/run.sh --daemon"
-# fi
+# Install Galaxy with redirect to galaxy.log file
+# NOTE: run.sh will try to start Galaxy after installing it but will fail trying to bind to port 80.
+# the trailing systemctl start galaxy.service should start it properly
+jetpack log 'Galaxy startup begun'
+runuser -l ${sge_user} -c "{ /bin/sh ${gal_dir}/run.sh \
+    > ${gal_dir}/galaxy.log 2>&1; sudo -i jetpack log 'Galaxy started'; sudo systemctl start galaxy.service; }" &
 
 
-# systemd service for Galaxy web without NGINX
+
+# systemd service for Galaxy 
 cat <<EOF >>/etc/systemd/system/galaxy.service
 [Unit]
 Description=Galaxy
@@ -99,51 +101,16 @@ Environment="SGE_CELL=${SGE_CELL}"
 Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
 Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
 Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
-UMask=022
-User=${sge_user}
-Group=${sge_user}
 WorkingDirectory=${gal_dir}
 ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
-ExecStop=/bin/sh ${gal_dir}/run.sh --stop-daemon
 Restart=always
 
 [Install]
 WantedBy=multi-user.target reboot.target
 EOF
 
-# systemd service for Galaxy with NGINX proxy
-# cat <<EOF >>/etc/systemd/system/galaxy.service
-# [Unit]
-# Description=Galaxy
-# After=network.target
-# After=time-sync.target
-
-# [Service]
-# Environment="SGE_ROOT=${SGE_ROOT}"
-# Environment="SGE_CELL=${SGE_CELL}"
-# Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
-# Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
-# Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
-# UMask=022
-# Type=simple
-# User=${sge_user}
-# Group=${sge_user}
-# WorkingDirectory=${gal_dir}
-# ExecStart=/bin/sh -c '/shared/Galaxy/.venv/bin/uwsgi --yaml /shared/Galaxy/config/galaxy.yml > /shared/Galaxy/galaxy.log 2>&1'
-# MemoryLimit=12G
-# Restart=always
-
-# MemoryAccounting=yes
-# CPUAccounting=yes
-# BlockIOAccounting=yes
-
-# [Install]
-# WantedBy=multi-user.target
-# EOF
-
 systemctl daemon-reload
 systemctl enable galaxy.service
-systemctl start galaxy.service
 
 
 # Create a logrotate file
