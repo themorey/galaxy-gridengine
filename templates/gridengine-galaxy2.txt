@@ -14,12 +14,7 @@ Autoscale = $Autoscale
     SubnetId = $SubnetId
     Region = $Region
     KeyPairLocation = ~/.ssh/cyclecloud.pem
-    CloudInit = '''#cloud-config
-runcmd:
- - yum install -y git python3
- - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
- - source /etc/profile
-'''    
+   
         [[[configuration]]]
         
         # For fast spin-up after Deallocate, force an immediate re-converge on boot
@@ -157,6 +152,13 @@ runcmd:
     Azure.MaxScalesetSize = $MaxScalesetSize
     AdditionalClusterInitSpecs = $HPCClusterInitSpecs
 
+    CloudInit = '''#cloud-config
+runcmd:
+ - yum install -y git python3
+ - ln -sf /usr/bin/python3 /usr/bin/python
+ - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
+ - source /etc/profile
+''' 
 
         [[[configuration]]]
         gridengine.autoscale = $Autoscale
@@ -177,6 +179,13 @@ runcmd:
     MaxPrice = $HTCSpotMaxPrice
     AdditionalClusterInitSpecs = $HTCClusterInitSpecs
 
+    CloudInit = '''#cloud-config
+runcmd:
+ - yum install -y git python3
+ - ln -sf /usr/bin/python3 /usr/bin/python
+ - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
+ - source /etc/profile
+''' 
 
         [[[configuration]]]
         gridengine.autoscale = $Autoscale
