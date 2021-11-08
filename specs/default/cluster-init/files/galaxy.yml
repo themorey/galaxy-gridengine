@@ -21,7 +21,11 @@ uwsgi:
   # The address and port on which to listen.  By default, only listen to
   # localhost (galaxy will not be accessible over the network).  Use
   # ':8080' to listen on all available network interfaces.
-  http: :80
+  #http: :80
+  shared-socket: :80
+  http: =0
+  uid: galaxy.user.name
+  gid: galaxy.user.name
 
   # By default uWSGI allocates a very small buffer (4096 bytes) for the
   # headers of each request. If you start receiving "invalid request
