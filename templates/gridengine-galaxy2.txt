@@ -62,7 +62,7 @@ Autoscale = $Autoscale
         run_list = recipe[cyclecloud::_hosts], recipe[cshared::client], recipe[cuser], recipe[gridengine::submitter]
 	galaxy.admin = $GalaxyAdminUser
         
-        [[[cluster-init cyclecloud-galaxy:default]]]
+        [[[cluster-init cyclecloud-galaxy:default:1.0.1]]]
 
         [[[network-interface eth0]]]
         AssociatePublicIpAddress = $GalaxyPublicNetwork
