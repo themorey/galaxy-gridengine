@@ -102,7 +102,9 @@ Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
 Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
 Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
 WorkingDirectory=${gal_dir}
-ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
+#ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
+ExecStart=/bin/sh ${gal_dir}/run.sh --daemon >> ${gal_dir}/galaxy.log 2>&1 &
+ExecStop=/bin/sh ${gal_dir}/run.sh --stop-daemon
 Restart=always
 
 [Install]
