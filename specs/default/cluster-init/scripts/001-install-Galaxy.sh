@@ -69,7 +69,7 @@ fi
 
 chown ${sge_user}:${sge_user} ${gal_dir}/config/{galaxy.yml,job_conf.xml,auth_conf.xml}
 sed -i "s/galaxy.user.name/$(jetpack config cyclecloud.cluster.user.name)/g" ${gal_dir}/config/galaxy.yml
-
+sed -i "s/galaxy.admin.user/$(jetpack config galaxy.admin)/g" ${gal_dir}/config/galaxy.yml
 
 # register Galaxy server as SGE submit node IF deployed by CycleCloud
 if [ -d /opt/cycle ]; then
