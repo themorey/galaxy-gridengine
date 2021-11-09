@@ -154,6 +154,8 @@ Autoscale = $Autoscale
 
     CloudInit = '''#cloud-config
 runcmd:
+ - setenforce 0 
+ - sed -i 's/enforcing/permissive/g' /etc/selinux/config
  - yum install -y git python3
  - ln -sf /usr/bin/python3 /usr/bin/python
  - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
@@ -181,6 +183,8 @@ runcmd:
 
     CloudInit = '''#cloud-config
 runcmd:
+ - setenforce 0 
+ - sed -i 's/enforcing/permissive/g' /etc/selinux/config
  - yum install -y git python3
  - ln -sf /usr/bin/python3 /usr/bin/python
  - echo "export DRMAA_LIBRARY_PATH=/sched/sge/sge-2011.11/lib/linux-x64/libdrmaa.so" >> /etc/profile
