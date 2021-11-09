@@ -27,7 +27,7 @@ fi
 
 
 #Install Python3 and Packages
-yum install -y git python3 openssl openssl-devel
+yum install -y git python3 openssl openssl-devel mercurial
 runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
 runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
 
@@ -52,7 +52,7 @@ chmod 1777 /mnt/resource
 
 # CLone the Galaxy repo to shared NFS dir (/shared)
 if [ ! -f ${gal_dir}/run.sh ]; then
-  runuser -l ${sge_user} -c "git clone https://github.com/galaxyproject/galaxy.git ${gal_dir}"
+  runuser -l ${sge_user} -c "git clone https://github.com/galaxyproject/galaxy.git -b release_21.09 ${gal_dir}"
 fi
 
 
