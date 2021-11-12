@@ -27,7 +27,7 @@ fi
 
 
 #Install Python3 and Packages
-yum install -y git python3 openssl openssl-devel mercurial
+yum install -y git python3 openssl openssl-devel mercurial ca-certificates
 runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
 runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
 
