@@ -27,7 +27,7 @@ fi
 
 
 #Install Python3 and Packages
-yum install -y git python3 openssl openssl-devel
+yum install -y git python3 openssl openssl-devel mercurial ca-certificates
 runuser -l ${sge_user} -c "python3 -m pip install -U --user pip"
 runuser -l ${sge_user} -c "python3 -m pip install --user virtualenv setuptools_rust cloudauthz"
 
@@ -52,7 +52,7 @@ chmod 1777 /mnt/resource
 
 # CLone the Galaxy repo to shared NFS dir (/shared)
 if [ ! -f ${gal_dir}/run.sh ]; then
-  runuser -l ${sge_user} -c "git clone https://github.com/galaxyproject/galaxy.git ${gal_dir}"
+  runuser -l ${sge_user} -c "git clone https://github.com/galaxyproject/galaxy.git -b release_21.09 ${gal_dir}"
 fi
 
 
@@ -69,7 +69,7 @@ fi
 
 chown ${sge_user}:${sge_user} ${gal_dir}/config/{galaxy.yml,job_conf.xml,auth_conf.xml}
 sed -i "s/galaxy.user.name/$(jetpack config cyclecloud.cluster.user.name)/g" ${gal_dir}/config/galaxy.yml
-
+sed -i "s/galaxy.admin.user/$(jetpack config galaxy.admin)/g" ${gal_dir}/config/galaxy.yml
 
 # register Galaxy server as SGE submit node IF deployed by CycleCloud
 if [ -d /opt/cycle ]; then
@@ -102,9 +102,9 @@ Environment="SGE_EXECD_PORT=${SGE_EXECD_PORT}"
 Environment="SGE_QMASTER_PORT=${SGE_QMASTER_PORT}"
 Environment="SGE_CLUSTER_NAME=${SGE_CLUSTER_NAME}"
 WorkingDirectory=${gal_dir}
-#ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
-ExecStart=/bin/sh ${gal_dir}/run.sh --daemon >> ${gal_dir}/galaxy.log 2>&1 &
-ExecStop=/bin/sh ${gal_dir}/run.sh --stop-daemon
+ExecStart=/bin/sh -c '${gal_dir}/.venv/bin/uwsgi --yaml ${gal_dir}/config/galaxy.yml >> ${gal_dir}/galaxy.log 2>&1'
+#ExecStart=/bin/sh ${gal_dir}/run.sh --daemon >> ${gal_dir}/galaxy.log 2>&1 &
+#ExecStop=/bin/sh ${gal_dir}/run.sh --stop-daemon
 Restart=always
 
 [Install]

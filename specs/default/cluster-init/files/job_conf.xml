@@ -21,10 +21,12 @@
         <destination id="htc" runner="drmaa">
             <!-- SGE DRMAA to send to a specific request 7GB of RAM (2 per CPU) and 4 CPUs -->
             <param id="nativeSpecification">-w n -l slot_type=htc</param>
+            <env file="/shared/Galaxy/.venv/bin/activate" />
         </destination>
         <destination id="mpi" runner="drmaa">
             <!-- SGE DRMAA to send to a specific request 420 GB of RAM and 116 CPUs for MPI job -->
             <param id="nativeSpecification">-w n -pe mpi 116</param>
+            <env file="/shared/Galaxy/.venv/bin/activate" />
         </destination>
     </destinations>
 </job_conf>
